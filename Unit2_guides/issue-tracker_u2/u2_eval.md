@@ -1,6 +1,6 @@
 # issue-tracker Eval
 
-Use this only after `baseline_cold_start.md` or `final_cold_start.md` exists. Do not give this file to the cold-start execution Agent.
+Use this only after `baseline_cold_start.md`, `detailed_doc_cold_start.md`, or `final_cold_start.md` exists. Score each run independently; do not give this file to the cold-start execution Agent.
 
 ## Scoring Output
 
@@ -23,20 +23,11 @@ The scoring output must include both answer accuracy and all Unit 2 training met
 | Assumptions made | count/list from trace |
 | Evidence path quality | weak / medium / strong |
 | Harness-first routing | low / medium / high |
-| Main missing Harness artifact | one most important artifact to improve |
-| Harness Completeness | sufficient / partial / missing, based on required artifact presence and key parts |
-| Harness Effectiveness | improved / mixed / worse, based on cold-start evidence rather than Markdown quantity |
-| Soft vs hard awareness | identifies advisory/navigational artifacts and risks that should become Unit3 hard controls |
+| Main guidance gap | one most important repo-guidance problem to improve |
 
-## Harness Design Scoring Lens
+## Calibration Review
 
-Score Harness completeness and Harness effectiveness separately.
-
-- Completeness: required artifacts exist, are repo-specific, and contain the minimum useful parts for entry, startup, project map, data/role model, safe smoke, and known risks.
-- Effectiveness: the final cold-start Agent answers more accurately, follows better evidence paths, needs less oral context, shows better Harness-first routing, and avoids unsafe guesses.
-- Tradeoff / overdesign signals: doc bloat, fragmented routing, or source-code repetition should affect the score only when the cold-start output shows worse routing, more irrelevant reads, more uncertainty, or poorer handoff quality.
-- Soft vs hard awareness: Unit2 artifacts are mostly soft or navigational constraints; grade whether the student can identify which risks should later become hard Unit3 controls.
-- Advanced reflection, not hard scoring unless evidenced: long-term maintenance debt, rule expiry, and future pruning strategy.
+After all three runs exist, evaluate the final comparison as a design judgment, not an artifact count. Require evidence for: the baseline guidance failure, Agent abilities improved by the detailed system, costs or contradictions introduced by that system, and every final keep/merge/remove decision. A final system passes calibration only when it is safer and easier to hand off than baseline and its remaining complexity is justified against the detailed-doc run.
 
 ## Answer Key
 
@@ -49,5 +40,5 @@ Score Harness completeness and Harness effectiveness separately.
 | Q5 | `/register`, `/login`, `/logout`; bcrypt password hashing | `app.py`, templates | Routes + hashing | Routes only | Invented default users | No auth |
 | Q6 | SQLite `items.db`; schema/helper in `db.py`; `init_db()` creates missing tables | `db.py`, `app.py` | File + init behavior | SQLite only | External DB | Treats DB as cache |
 | Q7 | `users`, `items`, `notes`, `task_shares`; owner/shared permissions with edit flags | `db.py`, `app.py` | Tables + permission fields | Users/items only | Generic objects | Omits `task_shares` |
-| Q8 | Add Harness docs, API map, permission smoke, read-only DB inspect | `app.py`, `db.py`, `api.py` | Safe and specific | Vague tests/docs | Reset/delete DB | Migration first |
+| Q8 | Refine suitable repo guidance for API/permissions, permission smoke, read-only DB inspect | `app.py`, `db.py`, `api.py` | Safe and specific | Vague tests/docs | Reset/delete DB | Migration first |
 | Q9 | Risks: `items.db`, `init_db()`, delete/update/unshare, sharing permissions, random secret/session | `db.py`, `app.py` | DB + destructive + permissions | Partial risks | No risks | Delete in smoke |

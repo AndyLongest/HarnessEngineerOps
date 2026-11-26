@@ -20,19 +20,6 @@ Strong groups: scoped `student-management-using-django`. The challenge is not ex
 
 ## Shared Reminder
 
+本轮实践比较 baseline、准确但详细的文档版本和改进后的 final。学生需要解释文档如何改变 Agent 的读取、判断和风险识别，同时评估重复、维护和人工复核成本。最终设计由运行证据支持。
+
 Do not compare raw file counts or cold-start times across repositories. Compare baseline vs final only inside the same repository.
-
-## Harness Design Tradeoff Reminder
-
-Unit 2 still asks students to build a minimal usable cold-start harness. The new design lens is not "write more docs"; it is "write just enough compressed guidance for a new Agent to find the right path."
-
-Unit 2 also introduces the vocabulary for soft constraints and hard constraints, but it does not add a formal soft-vs-hard experiment. Most Unit 2 artifacts are soft or navigational constraints: `AGENTS.md`, `RUNBOOK.md`, `PROJECT_MAP.md`, and `KNOWN_RISKS.md` can reduce misreading and unsafe guesses, but they cannot force an Agent to stay inside a boundary.
-
-Use this distinction only as a reflection lens in Unit 2. Students should be able to say which information is merely advisory, and which information starts to look like an enforceable boundary that belongs in Unit 3.
-
-Students should experience two common tradeoffs:
-
-- One giant document vs too many fragmented documents.
-- Information too brief vs information copied without compression.
-
-Student guides should keep this lightweight and place the main reflection in the final comparison report. Teacher guides and eval files should carry the deeper design judgment: whether the added artifacts improved cold-start behavior, or whether they only increased harness completeness while lowering harness effectiveness.

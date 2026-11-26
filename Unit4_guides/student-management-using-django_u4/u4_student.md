@@ -4,7 +4,7 @@
 
 Unit 4 要证明一个极小范围的 Django 功能真的完成。必须只选一个角色、一个页面或一个 view；不能做全仓库任务，不能跨 HOD、staff、student 三条线。
 
-本流程仍然以“让完成可证明、可交接”为主。最后对比报告里会有一个简短的 Tradeoff Reflection，用来回看 completion gate、E2E、handoff 和 clean state 检查是刚好够用，还是太轻或太重；这不是新增大任务，只是复盘时做一次设计判断。
+本练习不是要求验证越重越好。你需要比较轻验证收尾和强完成系统，判断哪些验证、E2E、清洁状态和交接内容真正改善了 Agent 能力，哪些只增加负担。
 
 ## 1. 选择小功能
 
@@ -15,9 +15,9 @@ Unit 4 要证明一个极小范围的 Django 功能真的完成。必须只选�
 - `F03 教师考勤只读流程检查`
 - `F04 HOD 单页只读筛选`
 
-## 2. 基线完成运行
+## 2. 基线：轻验证完成运行
 
-先不提供完成门禁，观察 Agent 是否过早宣布完成。
+先不提供完成门禁、E2E 协议、清洁状态检查和 handoff 协议，观察 Agent 如何判断“Django 功能是否完成”。
 
 ```text
 你正在接手 Unit3 的 <feature_id> Django 功能。代码实现已经存在或部分存在，请在不新增 completion gate、E2E 协议、清洁状态检查和 handoff 协议的前提下，判断这个功能是否可以标记为 passing。
@@ -27,15 +27,11 @@ Unit 4 要证明一个极小范围的 Django 功能真的完成。必须只选�
 
 记录它是否扫描 static/vendor，是否跨角色，是否运行 migrations 或 collectstatic，是否只凭页面 200 宣告完成。若它判断不能 passing，也要记录它是否能说清缺失证据和下一步安全行动。
 
-## 3. 软完成判断运行
+基线诊断要围绕四个问题：它是否知道要证明哪个角色和页面行为；它的验证深度是否覆盖角色、只读数据和范围风险；它是否需要最小 E2E 才能证明真实路径；下一位 Agent 是否能只靠仓库内容接手。
 
-在构建 completion gate 之前，先做一轮 soft completion run。只给 Agent 自然语言 checklist，例如“请确认测试、证据、交接都充分”，不要提供 completion gate、gate JSON、E2E 协议、session exit checklist 或 handoff 模板。
+## 3. 构建强完成系统
 
-Django soft completion 常见风险：只证明页面可访问，却没有证明目标角色看到正确只读数据，且没有跨 HOD/staff/student 或 static/vendor/migration 改动。
-
-请把完整过程保存为 `measurement_logs/soft_completion_run.md`。记录它是否提前 passing、是否漏掉 runtime/E2E、证据路径、清洁状态或交接要求。
-
-## 4. 构建完成门禁
+现在构建一个较完整的完成系统作为对照样本。它不是最终标准答案，而是用来观察更强验证会改善什么，也会带来什么维护和复核负担。
 
 先写 `scope_contract.md`，再创建：
 
@@ -44,7 +40,7 @@ Django soft completion 常见风险：只证明页面可访问，却没有证明
 - `scripts/verify_<feature_id>.py`
 - `verification_logs/<feature_id>_gate_result.md`
 
-门禁至少三层：
+强完成系统通常包含三层门禁：
 
 | 层级 | Django 仓库要求 |
 |---|---|
@@ -54,7 +50,7 @@ Django soft completion 常见风险：只证明页面可访问，却没有证明
 
 完成规则还必须确认没有修改 static/vendor/migrations，没有跨角色改动。
 
-## 5. 最小端到端验证
+## 4. 最小端到端验证
 
 端到端验证不是单元测试。它必须跑通当前 Unit3 功能对应的一条真实系统路径：启动 Django check/测试客户端或本地服务，经过登录/session、URL、view、template 和数据层，检查页面/响应结果，并验证角色和范围不变量。
 
@@ -73,7 +69,7 @@ Django soft completion 常见风险：只证明页面可访问，却没有证明
 
 如果 E2E 失败，不要把功能标记为 passing。请写 Agent 可读错误消息，说明失败的是角色登录、目标 view、只读数据展示，还是 static/vendor/migrations/跨角色边界，并指出下一步最小检查动作和禁止触碰区域。
 
-## 6. 清洁状态和交接
+## 5. 清洁状态和交接
 
 完成门禁通过后，还不能立刻宣布完成。当前会话必须留下一个下一位 Agent 可以接手的清洁状态。
 
@@ -90,7 +86,7 @@ Django soft completion 常见风险：只证明页面可访问，却没有证明
 
 如果任一检查失败，可以结束会话，但不能把功能标记为 passing。保持状态为 `active` 或 `blocked`，并写明失败原因和下一步。
 
-## 7. 交接演练和最终运行
+## 6. 交接演练和强完成运行
 
 交接演练的目的不是让新 Agent 继续开发，而是测试仓库内容是否已经足够说明当前状态。新 Agent 只能使用仓库内容和学生保存的工件，不能依赖口头解释。
 
@@ -106,16 +102,13 @@ Django soft completion 常见风险：只证明页面可访问，却没有证明
 
 把回答保存到 `measurement_logs/next_agent_handoff_drill.md`。合格的交接演练应能找到 feature 状态、gate/E2E/handoff 证据路径，不会把缺证据的功能误判为 passing，并且不需要学生口头补充。
 
-最终门禁完成运行不是重新实现功能，而是在已有 completion gate、E2E、清洁状态和 handoff 协议下，再执行一次收尾判断。保存到 `measurement_logs/final_gated_completion_run.md`。
+强完成运行不是重新实现功能，而是在已有 completion gate、E2E、清洁状态和 handoff 协议下，再执行一次收尾判断。保存到 `measurement_logs/final_gated_completion_run.md`。
 
-最后写 `unit4_comparison_report.md`，比较基线、soft completion 和 hard gated completion：soft 是否提前 passing，hard gate 是否发现 soft 漏掉的证据，是否明确执行 E2E，是否能独立判断 passing，以及对照条件是否一致。
+最后写 `unit4_comparison_report.md`，比较轻验证基线和强完成运行：哪些 Django 完成风险被补上，哪些负担变重，哪些 gate、E2E、清洁检查或交接内容应该保留、放松、合并或删除。最终判断可以比强完成系统更轻，但必须用运行证据解释。
 
-报告末尾增加一个简短的 Tradeoff Reflection：completion gate、E2E、handoff 和 clean state 检查是过轻、刚好够用还是过重？哪些完成判断可以保留 soft checklist，哪些必须 hard gate 化？下一轮会保留、压缩或删除什么？
-
-## 8. 交付物
+## 7. 交付物
 
 - `measurement_logs/baseline_completion_run.md`
-- `measurement_logs/soft_completion_run.md`
 - `scope_contract.md`
 - `completion_gate.md`
 - `completion_gate.json`
@@ -128,6 +121,6 @@ Django soft completion 常见风险：只证明页面可访问，却没有证明
 - `measurement_logs/final_gated_completion_run.md`
 - `unit4_comparison_report.md`
 
-## 9. 反误区
+## 8. 反误区
 
 不要做全仓库任务；不要同时修改三个角色；页面 200 不等于完成；没有范围合同和端到端证据不得建议通过；清洁状态是完成的一部分。

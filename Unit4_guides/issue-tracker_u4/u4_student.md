@@ -4,7 +4,7 @@
 
 Unit 4 要让一个问题追踪功能的完成状态可证明、可复核、可交接。本仓库必须证明权限边界正确：owner、shared user、未授权用户的可见性不能混淆。
 
-本流程仍然以“让完成可证明、可交接”为主。最后对比报告里会有一个简短的 Tradeoff Reflection，用来回看 completion gate、E2E、handoff 和 clean state 检查是刚好够用，还是太轻或太重；这不是新增大任务，只是复盘时做一次设计判断。
+本练习不是要求验证越重越好。你需要比较轻验证收尾和强完成系统，判断哪些验证、E2E、清洁状态和交接内容真正改善了 Agent 能力，哪些只增加负担。
 
 ## 1. 选择小功能
 
@@ -15,9 +15,9 @@ Unit 4 要让一个问题追踪功能的完成状态可证明、可复核、可�
 - `F03 只读搜索`
 - `F04 问题详情可见性检查`
 
-## 2. 基线完成运行
+## 2. 基线：轻验证完成运行
 
-先不提供完成门禁，观察 Agent 是否过早宣布完成。
+先不提供完成门禁、E2E 协议、清洁状态检查和 handoff 协议，观察 Agent 如何判断“issue-tracker 功能是否完成”。
 
 ```text
 你正在接手 Unit3 的 <feature_id> issue-tracker 功能。代码实现已经存在或部分存在，请在不新增 completion gate、E2E 协议、清洁状态检查和 handoff 协议的前提下，判断这个功能是否可以标记为 passing。
@@ -27,15 +27,11 @@ Unit 4 要让一个问题追踪功能的完成状态可证明、可复核、可�
 
 记录它是否只看路由 200，是否忽略未授权用户，是否没有权限证据就标记完成。若它判断不能 passing，也要记录它是否能说清缺失证据和下一步安全行动。
 
-## 3. 软完成判断运行
+基线诊断要围绕四个问题：它是否知道要证明哪个权限行为；它的验证深度是否覆盖 owner/shared/unauthorized 风险；它是否需要最小 E2E 才能证明真实路径；下一位 Agent 是否能只靠仓库内容接手。
 
-在构建 completion gate 之前，先做一轮 soft completion run。只给 Agent 自然语言 checklist，例如“请确认测试、证据、交接都充分”，不要提供 completion gate、gate JSON、E2E 协议、session exit checklist 或 handoff 模板。
+## 3. 构建强完成系统
 
-issue-tracker soft completion 常见风险：只验证登录用户能看到页面，却没有证明 owner/shared/unauthorized visibility 没有泄漏。
-
-请把完整过程保存为 `measurement_logs/soft_completion_run.md`。记录它是否提前 passing、是否漏掉 runtime/E2E、证据路径、清洁状态或交接要求。
-
-## 4. 构建完成门禁
+现在构建一个较完整的完成系统作为对照样本。它不是最终标准答案，而是用来观察更强验证会改善什么，也会带来什么维护和复核负担。
 
 创建：
 
@@ -44,7 +40,7 @@ issue-tracker soft completion 常见风险：只验证登录用户能看到页�
 - `scripts/verify_<feature_id>.py`
 - `verification_logs/<feature_id>_gate_result.md`
 
-门禁至少三层：
+强完成系统通常包含三层门禁：
 
 | 层级 | issue-tracker 要求 |
 |---|---|
@@ -54,7 +50,7 @@ issue-tracker soft completion 常见风险：只验证登录用户能看到页�
 
 任意权限边界失败，都不能建议通过。
 
-## 5. 最小端到端验证
+## 4. 最小端到端验证
 
 端到端验证不是单元测试。它必须跑通当前 Unit3 功能对应的一条真实系统路径：启动 Flask 应用或测试客户端，经过登录/session、route/template 或 API，使用真实或最小测试数据，检查页面/响应结果，并验证权限不变量。
 
@@ -71,7 +67,7 @@ issue-tracker soft completion 常见风险：只验证登录用户能看到页�
 
 如果 E2E 失败，不要把功能标记为 passing。请写 Agent 可读错误消息，说明失败的是 owner 可见性、shared 可见性、未授权访问，还是 update/delete 路由被误碰，并指出下一步最小检查动作和禁止触碰区域。
 
-## 6. 清洁状态和交接
+## 5. 清洁状态和交接
 
 完成门禁通过后，还不能立刻宣布完成。当前会话必须留下一个下一位 Agent 可以接手的清洁状态。
 
@@ -88,7 +84,7 @@ issue-tracker soft completion 常见风险：只验证登录用户能看到页�
 
 如果任一检查失败，可以结束会话，但不能把功能标记为 passing。保持状态为 `active` 或 `blocked`，并写明失败原因和下一步。
 
-## 7. 交接演练和最终运行
+## 6. 交接演练和强完成运行
 
 交接演练的目的不是让新 Agent 继续开发，而是测试仓库内容是否已经足够说明当前状态。新 Agent 只能使用仓库内容和学生保存的工件，不能依赖口头解释。
 
@@ -104,16 +100,13 @@ issue-tracker soft completion 常见风险：只验证登录用户能看到页�
 
 把回答保存到 `measurement_logs/next_agent_handoff_drill.md`。合格的交接演练应能找到 feature 状态、gate/E2E/handoff 证据路径，不会把缺证据的功能误判为 passing，并且不需要学生口头补充。
 
-最终门禁完成运行不是重新实现功能，而是在已有 completion gate、E2E、清洁状态和 handoff 协议下，再执行一次收尾判断。保存到 `measurement_logs/final_gated_completion_run.md`。
+强完成运行不是重新实现功能，而是在已有 completion gate、E2E、清洁状态和 handoff 协议下，再执行一次收尾判断。保存到 `measurement_logs/final_gated_completion_run.md`。
 
-最后写 `unit4_comparison_report.md`，比较基线、soft completion 和 hard gated completion：soft 是否提前 passing，hard gate 是否发现 soft 漏掉的证据，是否明确执行 E2E，是否能独立判断 passing，以及对照条件是否一致。
+最后写 `unit4_comparison_report.md`，比较轻验证基线和强完成运行：哪些权限完成风险被补上，哪些负担变重，哪些 gate、E2E、清洁检查或交接内容应该保留、放松、合并或删除。最终判断可以比强完成系统更轻，但必须用运行证据解释。
 
-报告末尾增加一个简短的 Tradeoff Reflection：completion gate、E2E、handoff 和 clean state 检查是过轻、刚好够用还是过重？哪些完成判断可以保留 soft checklist，哪些必须 hard gate 化？下一轮会保留、压缩或删除什么？
-
-## 8. 交付物
+## 7. 交付物
 
 - `measurement_logs/baseline_completion_run.md`
-- `measurement_logs/soft_completion_run.md`
 - `completion_gate.md`
 - `completion_gate.json`
 - `scripts/verify_<feature_id>.py`
@@ -125,6 +118,6 @@ issue-tracker soft completion 常见风险：只验证登录用户能看到页�
 - `measurement_logs/final_gated_completion_run.md`
 - `unit4_comparison_report.md`
 
-## 9. 反误区
+## 8. 反误区
 
 列表返回数据不等于权限正确；路由 200 不等于完成；不要重置 `items.db`；不要把交接报告写成流水账，必须让下一位 Agent 能独立判断。

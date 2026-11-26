@@ -10,9 +10,11 @@
 - 证据：`README.md`、`app.py`、`db.py`、`api.py`、`requirements.txt`、`Dockerfile`、`docker-compose.yml`、`items.db`。
 - 失败点：只说 CRUD；漏 `task_shares`；漏 API；把 `items.db` 当缓存；忽略 delete/update/unshare 风险。
 
-## 推荐学生新增工件
+## 候选 Harness 组件
 
-`AGENTS.md`、`RUNBOOK.md`、`PROJECT_MAP.md`、`DATA_MODEL.md`、`API_MAP.md`、`SMOKE_TEST.md`、`KNOWN_RISKS.md`。
+这些是候选组件，不是标准答案：`AGENTS.md`、`RUNBOOK.md`、`PROJECT_MAP.md`、`DATA_MODEL.md`、`API_MAP.md`、`SMOKE_TEST.md`、`KNOWN_RISKS.md`。
+
+学生应先比较 baseline、detailed-doc、final 三次冷启动，再解释最终保留哪些文档以及为什么。
 
 ## Eval：标准答案和评分规则
 
@@ -36,13 +38,6 @@
 
 Q1-Q8、Q9、误判、不确定表达、文件数、工具数、Harness-first 路由。只比较本仓库前后。
 
-## Harness Design Tradeoff 教师观察点
-
-观察学生是否把 Unit2 理解成“最小可用冷启动地图”，而不是“文档越多越好”。重点看：`AGENTS.md` 是否短入口而非百科全书；`PROJECT_MAP.md` 是否导航核心路径而非复制完整文件树；专题文档是否压缩业务对象、启动、风险和 smoke 路径；新增文档是否让 final Agent 少猜、少误判、少依赖口头补充。
-
-教师还应引导学生区分软约束和硬约束：Unit2 的入口文档、运行手册、风险提示多数只能降低误读，不能强制 Agent 不越界；需要强制执行的边界应留到 Unit3 变成 allowed/forbidden files、permission matrix 或 approval stop。
-
-正式评分应把 Harness 完整度和 Harness 有效度分开：完整度看必要工件是否存在并包含关键部分；有效度看冷启动输出、文件读取路径、误判、不确定表达和 Harness-first routing 是否真的改善。文档过长、过碎或复述源码，只有在证据显示它降低冷启动质量时才作为有效度问题。
 ## 评分提醒
 
-不要按 Markdown 数量给分。高分应能准确解释 `task_shares` 和安全边界。
+不要按 Markdown 数量给分。高分应能准确解释 `task_shares` 和安全边界。教师可从 cold-start trace、eval、对比报告和文档变更中判断学生是否经历了“发现缺口、尝试详细系统、识别成本、再平衡”的过程。

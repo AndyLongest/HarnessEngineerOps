@@ -8,12 +8,13 @@ Core sentence for every project:
 
 ## What Students Will Prove
 
-Students must run the same repo three times:
+Students must run the same repo twice:
 
 1. Baseline unconstrained run: give the Agent a real but broad task with no `feature_list.json`, no permission matrix, no `sprint_contract.md`, and no required trace.
-2. Soft-constrained run: repeat the same class of task with only natural-language advice such as "stay focused", "avoid risky files", and "do not refactor broadly"; do not provide allowed files, permission matrix, sprint contract, or required trace.
-3. Hard-constrained run: repeat the same class of task after adding Unit 3 control artifacts.
-4. Comparison report: prove what improved from baseline to soft, what only improved after hard constraints, and whether hard constraints reduced overreach without blocking the active feature.
+2. Final constrained run: repeat the same class of task after adding Unit 3 control artifacts.
+3. Comparison report: determine whether overreach and out-of-scope edits decreased, WIP=1 became clearer, risky actions were blocked, and task trace quality improved. Record unchanged or worse results with the same evidence standard.
+
+The constrained run is a high-control comparison case. Learners then justify which controls to retain, relax, merge, or remove by connecting behavior changes to task-granularity, completion-definition, complexity, and safety/efficiency costs. A final retest is useful when feasible. Record model, prompt, permission, budget, starting-state, and human-assistance differences before attributing an improvement to a control.
 
 The output is not graded by Markdown volume. A short, enforceable control file is better than a long narrative that the Agent can ignore.
 
@@ -22,7 +23,7 @@ Unit 3 separates two findings:
 - `forbidden violation`: the Agent broke an explicit rule that existed at the time.
 - `scope drift`: the Agent expanded the work when no explicit rule had been supplied, especially during baseline.
 
-Baseline runs should be judged primarily for scope drift. Soft runs should be judged for whether advisory language helped or was reinterpreted away. Hard runs should be judged primarily for boundary compliance and whether the final comparison proves scope drift decreased.
+Baseline runs should be judged primarily for scope drift. Final runs should be judged primarily for boundary compliance and whether the final comparison proves scope drift decreased.
 
 ## Safety Net
 
@@ -44,7 +45,7 @@ This follows the core Unit 3 design principles: WIP=1, externalized scope surfac
 
 Baseline prompts should sound like real product requests. They should give the Agent enough freedom to choose a surface, but should not list high-risk areas, allowed files, forbidden files, or Unit 3 control artifacts. They should still require the Agent to save implementation notes and verification records to `measurement_logs/baseline_unconstrained_run.md`, so the later eval and comparison have a stable input. Their purpose is to observe natural scope drift.
 
-Hard constrained runs must allow only one active feature. The Agent must read `feature_list.json`, sign or fill `sprint_contract.md`, cite the permission matrix, record a task trace, explain why it did not do the other candidate features, and note discovered but unfixed out-of-scope issues.
+Final constrained runs must allow only one active feature. The Agent must read `feature_list.json`, sign or fill `sprint_contract.md`, cite the permission matrix, record a task trace, explain why it did not do the other candidate features, and note discovered but unfixed out-of-scope issues.
 
 ## Project Set
 
@@ -71,11 +72,9 @@ The Unit 3 guide set mirrors the real local `UNIT2_GUIDES` child directories:
 Each project guide asks students to produce:
 
 - `measurement_logs/baseline_unconstrained_run.md`
-- `measurement_logs/soft_constrained_run.md`
 - `scripts/unit3_git_safety.ps1`
 - `measurement_logs/unit3_run_diff.patch`
 - `measurement_logs/baseline_eval.md`
-- `measurement_logs/soft_eval.md`
 - `feature_list.json`
 - `task_boundary.md`
 - `docs/policies/permission-matrix.md`
@@ -89,18 +88,3 @@ Each project guide asks students to produce:
 ## Do Not Drift Into Unit 4
 
 Unit 3 stops at controllability evidence. Do not add Completion Gate, E2E gate design, final handoff protocol, release signoff, or long-term ownership workflow. Those belong later.
-
-## Harness Design Tradeoff Reminder
-
-Unit 3 still focuses on making Agent execution controllable, not on creating the strictest possible rule system. A final run is better only if it reduces scope drift while still allowing the selected active feature to make progress.
-
-Soft constraints and hard constraints are now an explicit comparison. Soft constraints are natural-language advice, principles, reminders, and non-binding checklists. Hard constraints are enforceable boundaries: allowed/forbidden files, permission matrix, approval stop, sprint contract, required trace, and status rules. The Unit 3 question is which risks can be handled by soft guidance, and which must become hard controls.
-
-Students should notice four control tradeoffs:
-
-- Task too coarse vs task too small.
-- Scope too wide vs scope too narrow.
-- Permissions too wide vs permissions too narrow.
-- Trace too thin vs trace too noisy.
-
-Student guides should keep this as a short comparison reflection. Teacher guides and eval files should judge whether controls were just enough, or whether control completeness increased while execution effectiveness dropped.

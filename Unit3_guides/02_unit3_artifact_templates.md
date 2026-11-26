@@ -2,9 +2,9 @@
 
 These templates are intentionally operational. They are not project documentation; they are control surfaces for Agent execution.
 
-## Soft vs Hard Constraint Placement
+## Constraint Placement
 
-Soft constraints belong in the soft-constrained run prompt and should be written as advice only: keep the task small, avoid risky files, avoid broad refactors, and record what was checked. Do not include allowed files, forbidden files, permission matrix, sprint contract, approval stop, or mandatory trace template in the soft run.
+The baseline prompt preserves the broad product request. The high-control run adds the artifacts below so students can observe both their behavior changes and their costs. Soft guidance and hard boundaries remain options to assess when choosing the final design.
 
 Hard constraints belong in the artifacts below. They must be specific enough that an independent evaluator can judge whether the Agent obeyed them from diff, logs, and evidence.
 
@@ -296,18 +296,17 @@ Tradeoff check: a useful trace records decisions, commands, evidence, and blocke
 
 Every `measurement_logs/unit3_comparison_report.md` must compare scope drift directly:
 
-| Scope Drift Dimension | Baseline | Soft | Hard | Evidence |
-|---|---|---|---|---|
-| Feature count |  |  |  |  |
-| Surface split |  |  |  |  |
-| Filter parameter count |  |  |  |  |
-| Response/data-shape changes |  |  |  |  |
-| Incidental bug fixes |  |  |  |  |
-| Out-of-feature files |  |  |  |  |
-| High-risk area touched |  |  |  |  |
-| Soft advice followed or bypassed |  |  |  |  |
-| Hard boundary obeyed or violated |  |  |  |  |
+| Scope Drift Dimension | Baseline | High-control | Evidence |
+|---|---|---|---|
+| Feature count |  |  |  |
+| Surface split |  |  |  |
+| Filter parameter count |  |  |  |
+| Response/data-shape changes |  |  |  |
+| Incidental bug fixes |  |  |  |
+| Out-of-feature files |  |  |  |
+| High-risk area touched |  |  |  |
+| Existing boundary obeyed or violated |  |  |  |
 
 If `measurement_notes` are missing, oral supplementation count must be `未记录 / 不可判定`, not 0. Every improvement claim must cite run output, trace, diff, eval, or measurement notes; do not score by Markdown quantity.
 
-Every report should add a short control tradeoff note: what improved from baseline to soft, what only improved after hard controls, which constraints can stay soft, and which risks must be hard-coded.
+Every report should explain which controls changed behavior, which costs they introduced, what to retain/relax/merge/remove, and what evidence would change that decision. Record a boundary violation only when that boundary existed during the run.
