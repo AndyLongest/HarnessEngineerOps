@@ -26,13 +26,13 @@
 
 Unit 4 要把“完成”从 Agent 的主观声明变成可执行、可复核、可交接的关闭协议。
 
-学生比较同一个 Unit 3 feature 的三轮完成判断：
+学生比较同一个 Unit 3 feature 的两轮完成判断，再选择适合的完成系统：
 
 1. baseline completion：沿用 U3 边界，但没有 completion gate、E2E、clean state 和 handoff；
-2. soft completion：只有自然语言 checklist；
-3. hard gated completion：三层门禁、最小 E2E、证据、清洁状态和交接齐全。
+2. strong completion：运行明确的门禁、最小 E2E、证据、清洁状态和交接；
+3. 依据两轮证据决定哪些完成控制保留、放松、合并或移除。
 
-评分不看测试和模板数量，重点看是否减少过早 passing、是否有真实证据、外部人员能否复核、下一位 Agent 能否无口头背景接手。
+评分不看测试和模板数量。强完成系统是认真构建的对照样本；最终设计要说明哪些检查补上真实证据，哪些增加运行、复核或维护成本，并保持必要的业务安全和完成证据。
 
 ## 3. Unit 3 继承规则
 
@@ -46,7 +46,7 @@ U4 必须接住 U3 的同一个功能，不重新选择需求。指南必须要�
 - 原验证方式和 trace；
 - 当前分支、提交、Git 状态或起始 diff。
 
-如课堂不得不换功能，必须先记录原因，并保证 baseline、soft、hard 仍使用同一个新功能和同一起始条件，不能通过换简单任务制造改善。
+如课堂不得不换功能，必须先记录原因，并保证 baseline 与 strong completion 仍使用同一个新功能和同一起始条件，不能通过换简单任务制造改善。
 
 ## 4. 写教材前的完成风险分析
 
@@ -71,20 +71,19 @@ U4 必须接住 U3 的同一个功能，不重新选择需求。指南必须要�
 2. `## 目标`
 3. `## 1. 继承 Unit 3 的小功能`
 4. `## 2. 基线完成运行`
-5. `## 3. 软完成判断运行`
-6. `## 4. 构建完成门禁`
-7. `## 5. 最小端到端验证`
-8. `## 6. 清洁状态和交接`
-9. `## 7. 交接演练和最终运行`
-10. `## 8. 对比报告`
-11. `## 9. 交付物`
-12. `## 10. 反误区`
+5. `## 3. 构建强完成系统`
+6. `## 4. 最小端到端验证`
+7. `## 5. 清洁状态和交接`
+8. `## 6. 交接演练和强完成运行`
+9. `## 7. 对比报告与最终设计`
+10. `## 8. 交付物`
+11. `## 9. 反误区`
 
 指南使用中文，命令和路径保留原文。每轮必须提供可直接复制的提示词、输入、输出路径、判断指标和禁止行为。
 
 ## 6. 对照条件
 
-指南要求 baseline、soft 和 hard 尽量保持：
+指南要求 baseline 与 strong completion 尽量保持：
 
 - 同一 repo、feature id 和 behavior；
 - 同一起始代码状态或可复核 diff；
@@ -115,17 +114,16 @@ U4 必须接住 U3 的同一个功能，不重新选择需求。指南必须要�
 - 下一位 Agent 是否能接手；
 - 判断不能 passing 时，是否清楚指出缺口。
 
-## 8. 软完成判断
+## 8. 诊断基线完成判断
 
-从相同起点执行同一 feature，只允许自然语言建议，例如“确认测试、运行结果、证据和交接是否充分”。不得提供：
+要求学生从以下视角分析 baseline：
 
-- completion gate 文档或 JSON；
-- 三层 gate 定义；
-- E2E 协议；
-- session exit checklist；
-- handoff 模板。
+- 验证对象：Agent 要证明哪个具体行为；
+- 验证深度：证据是否覆盖真实业务风险；
+- E2E 价值与成本：最小真实路径会补上什么证据；
+- 清洁状态信心：下一位 Agent 是否能独立判断状态和下一步。
 
-保存 `measurement_logs/soft_completion_run.md`，记录是否提前 passing，以及是否遗漏 runtime/E2E、证据路径、clean state 或 handoff。
+强完成系统应针对这些缺口设计。学生要同时记录它新增的运行、维护和复核负担，最后解释哪些控制值得保留。不能把 baseline 拒绝 passing 自动当作高质量判断，还要看它是否识别了真正缺口。
 
 ## 9. 三层完成门禁
 
@@ -342,7 +340,7 @@ BOUNDARY: 修复时不得触碰什么
 
 保存 `measurement_logs/next_agent_handoff_drill.md`，记录是否找到状态、证据、风险和下一步，以及所需口头补充次数。
 
-## 15. Hard gated final run
+## 15. 强完成运行
 
 指南必须生成仓库特定 copy-paste prompt，要求 Agent：
 
@@ -359,24 +357,23 @@ BOUNDARY: 修复时不得触碰什么
 
 执行 Agent 不得自评。教师提供 `eval.md` 时，独立评分 Agent 只能使用运行日志、gate/E2E/clean/handoff 证据和 measurement notes；不得访问仓库或补证据。没有 eval 时记录缺失。
 
-指南必须提供 copy-paste prompt，生成 `unit4_comparison_report.md`，比较 baseline、soft 和 hard：
+指南必须提供 copy-paste prompt，生成 `unit4_comparison_report.md`，比较 baseline 与 strong completion：
 
-| 指标 | Baseline | Soft | Hard | Evidence |
-|---|---|---|---|---|
-| 过早 passing | | | | |
-| 缺失证据项 | | | | |
-| Runtime/integration 已执行 | | | | |
-| E2E 已执行 | | | | |
-| Clean state 明确 | | | | |
-| 交接口头补充次数 | | | | |
-| 可独立判断 passing | | | | |
+| 指标 | Baseline | Strong completion | Evidence |
+|---|---|---|---|
+| 过早 passing | | | |
+| 缺失证据项 | | | |
+| Runtime/integration 已执行 | | | |
+| E2E 已执行 | | | |
+| Clean state 明确 | | | |
+| 交接口头补充次数 | | | |
+| 可独立判断 passing | | | |
 
-报告还要讨论 gate、E2E、handoff 和 clean state 是否过轻、刚好或过重；哪些判断可保持 soft checklist，哪些必须 hard gate 化。
+报告要把收益、成本和适用条件连接到运行证据。明确 gate、E2E、handoff 和 clean state 的保留、放松、合并或移除决定，以及什么新证据会使学生修改该决定。最终方案可以更轻，但仍须证明必要业务结果和安全边界。
 
 ## 17. 最低交付物
 
 - `measurement_logs/baseline_completion_run.md`
-- `measurement_logs/soft_completion_run.md`
 - `measurement_logs/final_gated_completion_run.md`
 - `completion_gate.md` / `completion_gate.json`
 - 验证脚本和 gate result
@@ -409,7 +406,7 @@ BOUNDARY: 修复时不得触碰什么
 
 - 文件存在且章节齐全；
 - 明确继承 U3 feature；若实际 feature 未知，使用待填占位而不伪造；
-- baseline、soft、hard 条件分离；
+- baseline 与强完成条件分离，最终设计有证据支持；
 - 三层 gate、最小 E2E、业务不变量和禁止区域针对真实仓库；
 - 包含每轮执行、交接演练、最终运行和对比的 copy-paste prompts；
 - gate 负担与 feature 风险匹配；

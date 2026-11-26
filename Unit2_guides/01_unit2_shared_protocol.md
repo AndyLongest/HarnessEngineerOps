@@ -59,6 +59,8 @@ Unit 2 要让新 Agent 从“源码侦察”转为“Harness 路由 + 定向核�
 - 更早识别风险；
 - 能提出安全的下一步任务。
 
+实验比较 baseline、准确但详细的文档系统、根据证据改进后的 final 三种状态。详细版本是认真构建的对照样本；最终版本必须解释哪些指导改善了 Agent 行为，哪些只增加阅读、复核和维护成本。参考层级可帮助设计实验，但学生指南必须自行说明所需步骤。
+
 Unit 2 可以说明软约束与硬约束的区别，但不进行正式控制实验。导航、提醒和风险说明通常是软约束；allowed/forbidden files、permission matrix、approval stop 和 sprint contract 留到 Unit 3。
 
 ## 4. `u2_student.md` 固定结构
@@ -71,10 +73,10 @@ Unit 2 可以说明软约束与硬约束的区别，但不进行正式控制实�
 4. `## 1. 冷启动前测`
 5. `## 2. 记录指标`
 6. `## 3. 独立评分`
-7. `## 4. 改造任务链`
+7. `## 4. 详细文档系统实验`
 8. `## 5. 特别注意`
-9. `## 6. 最终复测`
-10. `## 7. 对比报告`
+9. `## 6. 改进并最终复测`
+10. `## 7. 对比与反思`
 11. `## 8. 交付物`
 12. `## 9. 反误区`
 
@@ -116,7 +118,7 @@ Unit 2 可以说明软约束与硬约束的区别，但不进行正式控制实�
 把完整回答保存为 measurement_logs/baseline_cold_start.md。
 ```
 
-问题必须能从仓库证据判断，且 baseline 与 final 完全相同。最终复测只把输出改为 `measurement_logs/final_cold_start.md`。
+问题必须能从仓库证据判断，且三轮完全相同。详细文档复测只把输出改为 `measurement_logs/detailed_doc_cold_start.md`；最终复测改为 `measurement_logs/final_cold_start.md`。每轮使用全新会话，保留模型、权限、预算和口头补充记录。
 
 ## 7. 指标与记录
 
@@ -139,7 +141,7 @@ Unit 2 可以说明软约束与硬约束的区别，但不进行正式控制实�
 执行 Agent 不得自评。指南必须提供 copy-paste prompt，要求无关评分 Agent 只使用：
 
 1. 教师提供的 `eval.md`；
-2. baseline 或 final cold-start 输出；
+2. baseline、detailed-doc 或 final 本轮的 cold-start 输出；
 3. `measurement_notes`。
 
 评分 Agent 不得访问仓库、使用外部知识或替执行 Agent 补证据。教师没有提供 `eval.md` 时应暂停评分并记录缺失，不得自创标准答案。
@@ -147,13 +149,14 @@ Unit 2 可以说明软约束与硬约束的区别，但不进行正式控制实�
 保存：
 
 - `measurement_logs/baseline_eval.md`
+- `measurement_logs/detailed_doc_eval.md`
 - `measurement_logs/final_eval.md`
 
 评分输出至少包含 Q1–Q8 得分、Q9 风险识别、安全下一步、耗时、口头补充、文件读取、工具调用、不确定表达和主要缺口。
 
-## 9. Harness 改造任务链
+## 9. 详细文档系统实验
 
-指南必须根据仓库实际需要，从下列工件选择最小集合，说明每个工件应记录的真实内容：
+先根据 baseline 缺口构建准确、可追溯但较详细的指导系统。从下列工件选择有实际内容的集合，允许较细的专题或流程层级，以观察详细指导的收益和成本：
 
 - `AGENTS.md`：最短入口、阅读顺序和安全边界；
 - `RUNBOOK.md`：安装、启动、停止、测试和常见失败；
@@ -165,7 +168,9 @@ Unit 2 可以说明软约束与硬约束的区别，但不进行正式控制实�
 - `KNOWN_RISKS.md`：仓库特定危险状态和操作；
 - `scope_contract.md`：中大型或高噪声仓库的明确范围。
 
-不得要求学生机械创建全部文件。指南必须要求解释哪些工件保留、合并或不创建，以及原因。
+不得用错误事实或空文件制造反面样本。每个事实必须能核验到源码。用同一冷启动提示词复测，保存 `measurement_logs/detailed_doc_cold_start.md`，独立评分保存 `measurement_logs/detailed_doc_eval.md`。
+
+指南必须要求学生先比较 baseline 与详细版本：哪些误判消失、哪些仍存在、哪些指导改变了读取路径，以及是否增加重复、噪音、过时风险和人工复核成本。再决定最终保留、合并、删减或改写哪些指导。更短或更长都需要证据支持。
 
 Harness 设计需要讨论两组取舍：
 
@@ -174,9 +179,9 @@ Harness 设计需要讨论两组取舍：
 
 ## 10. 最终复测与对比
 
-添加 Harness 后，用同一问题、相近 Agent/模型、时间预算和权限进行 final cold start，并独立评分。
+根据两轮结果改进 Harness 后，用同一问题、相近 Agent/模型、时间预算和权限进行 final cold start，并独立评分。记录环境差异，不把模型或人工帮助变化直接归因于文档设计。
 
-指南必须提供 copy-paste prompt，生成 `measurement_logs/metrics_comparison.md`。报告只比较同一仓库 baseline 与 final，并引用 cold-start 输出、eval、measurement notes 和 Harness 变更。
+指南必须提供 copy-paste prompt，生成 `measurement_logs/metrics_comparison.md`。报告比较同一仓库 baseline、detailed-doc 与 final，并引用三轮 cold-start 输出、eval、measurement notes 和 Harness 变更。
 
 至少回答：
 
@@ -186,12 +191,16 @@ Harness 设计需要讨论两组取舍：
 - 哪个工件最有效；
 - 是否有工件过长、过碎或接近源码复述；
 - 哪些内容可以保持软约束，哪些风险应在 Unit 3 硬化。
+- 最终保留、合并或移除了什么，以及运行证据支持的理由；
+- 可以迁移到另一个任务的设计原则及其适用条件。
 
 ## 11. 最低交付物
 
 - `measurement_logs/baseline_cold_start.md`
+- `measurement_logs/detailed_doc_cold_start.md`
 - `measurement_logs/final_cold_start.md`
 - `measurement_logs/baseline_eval.md`
+- `measurement_logs/detailed_doc_eval.md`
 - `measurement_logs/final_eval.md`
 - `measurement_logs/measurement_notes.md` 或等价记录
 - 实际选择的最小 Harness 工件
@@ -217,7 +226,8 @@ Harness 设计需要讨论两组取舍：
 
 - 目标文件存在且章节齐全；
 - 冷启动问题、路径、业务对象和风险来自真实仓库；
-- 包含 baseline、final、独立评分和对比的 copy-paste prompts；
+- 包含 baseline、detailed-doc、final、独立评分和对比的 copy-paste prompts；
+- 详细版本事实准确，最终取舍同时讨论行为改善和新增负担；
 - 范围策略与仓库规模匹配；
 - 没有要求不必要的 Harness 文件；
 - 没有生成 teacher guide、eval 或实验答案；

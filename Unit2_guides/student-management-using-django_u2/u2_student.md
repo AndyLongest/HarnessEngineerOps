@@ -4,8 +4,6 @@
 
 本仓库是大型 Django 学生管理系统。Unit 2 必须使用范围合同：只让新 Agent 理解一个可交接的主线，而不是解释几千个静态、依赖或截图文件。
 
-本流程仍然以“搭建最小可用 harness”为主。最后对比报告里会有一个简短的 Tradeoff Reflection，用来回看新增文档是否刚好够用，还是过长、过碎或太像源码复述；这不是新增大任务，只是复盘时做一次设计判断。同时标出哪些内容只是软约束或导航约束，哪些风险以后应该在 Unit3 变成硬约束。
-
 ## 0. 学生先熟悉仓库
 
 你对这个仓库也还陌生。正式做冷启动前测之前，先建立基本方位感：看一遍目录、`README.md`、依赖文件、启动入口和主要源码文件，初步判断它是什么系统、如何启动、数据可能在哪里、哪些操作可能会写入状态。
@@ -59,8 +57,8 @@
 
 我会给你三份材料：
 1. eval.md：教师提供的标准答案、评分规则和指标抽取规则。
-2. baseline_cold_start.md 或 final_cold_start.md：执行 Agent 的冷启动输出。
-3. measurement_notes：学生记录的本次测量信息，至少包括 baseline/final、口头补充次数；如果冷启动输出缺少 Start/End time，也在这里补充。
+2. baseline_cold_start.md、detailed_doc_cold_start.md 或 final_cold_start.md：执行 Agent 的本轮冷启动输出。
+3. measurement_notes：学生记录的本次测量信息，至少包括本轮是 baseline、detailed-doc 还是 final，以及口头补充次数；如果冷启动输出缺少 Start/End time，也在这里补充。
 
 请只根据这些材料评分，不要访问仓库，不要替执行 Agent 补全答案。输出必须包含：
 - Q1-Q8 每题得分：1 / 0.5 / 0，并说明依据
@@ -79,49 +77,54 @@
 - Evidence path quality：弱 / 中 / 强
 - Harness-first 路由程度：低 / 中 / 高
 - 主要扣分点
-- 最需要补强的仓库工件
+- 最需要补强的指导缺口
 
 请把完整评分结果保存为：
 - 如果输入是 baseline_cold_start.md：measurement_logs/baseline_eval.md
+- 如果输入是 detailed_doc_cold_start.md：measurement_logs/detailed_doc_eval.md
 - 如果输入是 final_cold_start.md：measurement_logs/final_eval.md
 ```
 
-## 4. 改造任务链
+## 4. 详细文档系统实验
 
-这一部分不是让你“补几篇 Markdown”凑数量，而是把仓库外、脑子里、口头解释里的关键信息放回项目中，让仓库本身成为 Agent 的事实来源。以后新的 Agent 接到开发任务时，可以先读这些入口和专题文档，快速知道项目怎么启动、业务对象是什么、哪些地方危险，再把上下文预算用在真正的功能开发上。
+先不要直接追求“最终版本”。先把前测结果当成“文档不足时 Agent 会怎样”的证据。
 
-推荐做法是：`AGENTS.md` 只做短入口和路由，不写成百科全书；`scope_contract.md`、`RUNBOOK.md`、`PROJECT_MAP.md`、`ROLE_FLOW.md` 等专题文档按需展开。这样既能降低冷启动发现成本，也能提高后续开发效率。
+然后创建一个认真、准确、但偏详细的文档系统。这个版本可以包含根入口、范围说明、运行说明、项目地图、Django 路由、角色流程、数据、风险、模块或模板说明；也可以使用嵌套 docs 目录，把 setup、architecture、workflow、module、risk 分开写。不要故意写错信息，也不要机械堆文件。每个重要事实都应该能回到源码证据。
 
-请仔细关注下表中的每一个文件，一个一个补齐。每补完一个文件，都要问自己三件事：它补上了哪个冷启动缺口？它让 Agent 少猜了什么？后测中应该从哪个回答或指标看出改善？如果答不上来，说明这个文件还只是空壳，需要继续改。
+用同一个冷启动提示词让全新的 Agent 复测详细版本，保存为：
 
-| 顺序 | 工件 | 要解决的问题 |
-|---|---|---|
-| 1 | `scope_contract.md` | 教材角色：本次只看哪里的边界线。<br>解决缺口：仓库太大，范围不清。<br>后续收益：避免 Agent 把时间浪费在无关文件上。 |
-| 2 | `AGENTS.md` | 教材角色：仓库的“地图首页”。<br>解决缺口：不知道先读哪些入口文件。<br>后续收益：不用扫描几千个静态文件。 |
-| 3 | `RUNBOOK.md` | 教材角色：开工说明书。<br>解决缺口：依赖安装、Django 检查、启动命令不清楚。<br>后续收益：后续开发不用重新摸索怎么跑。 |
-| 4 | `PROJECT_MAP.md` | 教材角色：目录导览。<br>解决缺口：配置、路由、通用视图、角色视图和模板位置不清楚。<br>后续收益：降低大型仓库的发现成本。 |
-| 5 | `ROLE_FLOW.md` | 教材角色：角色流程地图。<br>解决缺口：不懂 HOD、staff、student 三类角色怎么走。<br>后续收益：避免后续开发跨角色乱改。 |
-| 6 | `DATA_MODEL.md` | 教材角色：范围内数据地图。<br>解决缺口：选定范围内模型和关联不清楚。<br>后续收益：够用即可，不把历史代码全搬进文档。 |
-| 7 | `SMOKE_TEST.md` | 教材角色：最小安全验证。<br>解决缺口：不知道怎样低风险证明项目可运行。<br>后续收益：不用迁移、清库、生成静态文件来验证。 |
-| 8 | `KNOWN_RISKS.md` | 教材角色：危险路段提示牌。<br>解决缺口：不知道哪里要避开。<br>后续收益：避开 static/vendor、migrations、媒体输出、邮件配置和删除视图风险。 |
+```text
+measurement_logs/detailed_doc_cold_start.md
+measurement_logs/detailed_doc_eval.md
+```
 
 ## 5. 特别注意
 
 你现在不需要完全掌握这个大型 Django 仓库的每一行代码。Unit 2 的重点是找出“新 Agent 最容易迷路的地方”，再把这些信息写到它能稳定找到的位置。对这个仓库来说，最容易迷路的是：文件数量太大、静态资源和第三方资源太多、角色流程分散、业务代码和模板不容易对应。
 
-写文档时要像画地图：先划定本单元范围，再标主路和危险路段。大型仓库尤其不能追求“全仓库可读”，而要追求“选定范围可交接”。范围越清楚，后续开发越容易开始；范围越大，Agent 越容易把上下文浪费在无关文件上。
+比较前测和详细版本时，重点看 Agent 能力变化：是否跳过 static/vendor 噪音，是否区分 HOD/admin、staff、student，是否理解 Django 路由和 custom email auth，是否避免迁移、collectstatic、删除视图和 DB 写入风险。也要看详细文档有没有引入新问题：层级太深、角色/模型/路由事实重复、或让教师很难快速审核准确性。
 
-## 6. 最终复测
+## 6. 改进并最终复测
 
-新开 Agent，用同一冷启动提示词复测，只把保存路径改成：
+根据两次运行结果，保留真正改善 Agent 冷启动的文档，合并或删除没有带来能力改善的文档。不要因为某个文件在参考层级里出现就保留它，也不要因为“越短越好”就删掉有用的范围或角色风险说明。
+
+新开 Agent，用同一冷启动提示词复测最终版本，只把保存路径改成：
 
 ```text
 请把完整回答保存为 measurement_logs/final_cold_start.md。
 ```
 
-## 7. 对比报告
+独立评分后保存：
 
-生成 `measurement_logs/metrics_comparison.md`，说明范围合同是否帮助新 Agent 跳过静态噪音、正确进入目标角色和目标流程。
+```text
+measurement_logs/final_eval.md
+```
+
+最终版本不是把详细版本简单缩短。逐项检查每个保留、合并或删除的文档：它修复了哪条 baseline 失误，是否在 detailed-doc 运行中改变了 Agent 行为，以及它带来的阅读、重复和维护成本。没有运行证据支持的复杂度，不应默认保留。
+
+## 7. 对比与反思
+
+生成 `measurement_logs/metrics_comparison.md`，比较 baseline、detailed-doc 和 final 三种状态。结论要说明最终文档系统是否帮助新 Agent 跳过静态噪音、正确进入目标角色和目标流程。
 
 请直接使用下面的 prompt 生成最终对比报告：
 
@@ -130,20 +133,21 @@
 
 我会给你这些材料：
 1. measurement_logs/baseline_eval.md：独立评分 Agent 对前测冷启动的评分。
-2. measurement_logs/final_eval.md：独立评分 Agent 对后测冷启动的评分。
-3. measurement_logs/baseline_cold_start.md 和 measurement_logs/final_cold_start.md：前后两次冷启动原始输出。
-4. measurement_notes：学生记录的补充指标，包括口头补充次数、缺失时间、异常情况。
-5. 本次新增或改进的 Harness 工件清单，必要时包括关键片段。
+2. measurement_logs/detailed_doc_eval.md：独立评分 Agent 对详细文档版本的评分。
+3. measurement_logs/final_eval.md：独立评分 Agent 对最终版本的评分。
+4. measurement_logs/baseline_cold_start.md、measurement_logs/detailed_doc_cold_start.md 和 measurement_logs/final_cold_start.md：三次冷启动原始输出。
+5. measurement_notes：学生记录的补充指标，包括口头补充次数、缺失时间、异常情况。
+6. 本次保留、合并、删除或改写的 Harness 文档清单，必要时包括关键片段。
 
 请只根据这些材料生成 measurement_logs/metrics_comparison.md，不要替执行 Agent 补全答案，也不要把文档数量当成改造成绩。
 
 报告必须包含：
-- 一张 baseline vs final 指标表，至少比较：冷启动耗时、Q1-Q8 答对率、Q9 风险识别、下一步安全任务、口头补充次数、文件读取数、Commands run、Searches performed、Tool calls、不确定表达、明确误判、Evidence path quality、Harness-first 路由程度。
-- 哪些 Harness 工件最可能带来了改善；每条结论都要引用前后输出或评分中的证据。
-- 仍然没有改善或变差的指标，以及可能原因。
+- 一张 baseline vs detailed-doc vs final 指标表，至少比较：冷启动耗时、Q1-Q8 答对率、Q9 风险识别、下一步安全任务、口头补充次数、文件读取数、Commands run、Searches performed、Tool calls、不确定表达、明确误判、Evidence path quality、Harness-first 路由程度。
+- 详细文档版本让 Agent 哪些能力改善；每条结论都要引用输出或评分证据。
+- 详细文档版本引入了哪些新成本或维护风险。
+- 最终版本保留、合并、删除了什么，以及原因。
 - 对“final 是否更适合交接给新 Agent”的明确结论：是 / 部分是 / 否。
-- 下一轮最应该补强的 1-3 个仓库工件。
-- Tradeoff Reflection：哪个 Harness 工件最明显提高了冷启动质量？有没有哪个工件过长、过碎或太像源码复述？哪些信息只是软约束或导航约束？哪些风险以后应变成 Unit3 硬约束？下一轮会保留、压缩或删除什么？
+- 反思：这次实验改变了你对文档系统设计的什么判断？什么原则可以迁移到另一个仓库？
 
 请把完整报告保存为 measurement_logs/metrics_comparison.md。
 ```
@@ -152,7 +156,9 @@
 
 - `measurement_logs/baseline_cold_start.md`
 - `measurement_logs/baseline_eval.md`
-- 新增或改进的 Harness 工件
+- `measurement_logs/detailed_doc_cold_start.md`
+- `measurement_logs/detailed_doc_eval.md`
+- 最终保留的 Harness 文档系统
 - `measurement_logs/final_cold_start.md`
 - `measurement_logs/final_eval.md`
 - `measurement_logs/metrics_comparison.md`

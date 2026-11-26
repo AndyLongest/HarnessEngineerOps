@@ -4,6 +4,8 @@
 
 训练学生把库存 功能的“完成”绑定到库存余额不变量。高分不是多写测试，而是能证明只读筛选/视图 没有破坏 product/location/movement/Balance 关系。
 
+教师观察重点是学生是否能校准完成系统：轻验证暴露什么风险，强完成系统改善什么，哪些验证或交接内容值得保留，哪些只是负担。
+
 ## 2. 推荐 Unit4 功能
 
 推荐 `F01 low-stock filter`，也可选 location stock view、movement history 只读视图、transfer 后库存余额检查。
@@ -44,12 +46,13 @@ Flask app 或 测试客户端 准备 product/location/balance 数据，执行目
 - 是否只改当前功能允许范围；
 - `feature_list.json` 证据 是否指向真实日志。
 
-## 9. 教师应在验证日志中检查什么
+## 9. 教师应在验证日志和对比报告中检查什么
 
 - 三层 gate 是否都有命令/过程和输出摘要；
 - E2E 是否检查 Balance 或库存总量；
 - 失败信息是否有 WHAT/WHY/FIX/BOUNDARY；
-- 最终 是否比 基线 更可复核。
+- 强完成运行是否比基线更可复核；
+- 学生是否说明哪些 gate、E2E、清洁检查或交接内容应保留、放松、合并或删除。
 
 ## 10. 建议反馈话术
 
@@ -57,17 +60,6 @@ Flask app 或 测试客户端 准备 product/location/balance 数据，执行目
 - “这个 功能可以很小，但 证据必须能让下一位 Agent 独立判断。”
 - “不要为了验证验证低库存筛选而重写 transfer 逻辑。”
 
-
-## Soft Completion vs Hard Gate 教师观察
-
-Unit4 不重新做三轮开发执行，而是比较完成判断本身。教师重点观察：soft completion 是否过早 passing；hard gate 是否发现 soft run 漏掉的 runtime/E2E、证据路径、清洁状态或交接要求；hard gate 是否因为过重降低复核价值。
-
-课堂结论至少要区分一类可以保留 soft checklist 的完成判断，以及一类必须 hard gate 化的完成证据。
-## Harness Design Tradeoff 教师观察点
-
-观察学生是否把 Unit4 理解成“最小可证明的关闭协议”，而不是把 gate、E2E、handoff 做成仪式。重点看：completion gate 是否证明当前功能而非全系统；E2E 是否最小但真实；handoff 是否足够下一位 Agent 接手但不过长；clean-state 检查是否有真实状态证据。
-
-正式评分应把 Harness 完整度和 Harness 有效度分开：完整度看三层 gate、E2E 日志、feature_list 证据、交接和清洁状态是否齐全；有效度看这些证据是否减少提前 passing、证据缺失和口头补充。过重的 gate、E2E 或 handoff 只有在降低清晰度、可执行性或复核价值时才扣分。
 ## 11. 评分量规
 
 | 评分项 | 分值 |
@@ -78,6 +70,6 @@ Unit4 不重新做三轮开发执行，而是比较完成判断本身。教师�
 | Agent 可读错误消息 | 10 |
 | 交接协议质量 | 15 |
 | 清洁状态检查 | 10 |
-| 基线/最终对比 | 10 |
+| 校准判断质量 | 10 |
 
-不按测试数量评分；不按 Markdown 数量评分；不奖励大范围重构；不奖励复杂但不可运行的 E2E；不允许学生只用 Agent 自述作为完成证据。
+不按测试数量评分；不按 Markdown 数量评分；不奖励大范围重构；不奖励复杂但不可运行的 E2E；不允许学生只用 Agent 自述作为完成证据。最终系统不必最复杂，但必须由基线/强完成运行证据支撑。

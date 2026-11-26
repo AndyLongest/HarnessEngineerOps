@@ -6,10 +6,11 @@
 
 评估学生是否在大型 Django 仓库中建立了 scoped 完成协议，并避免 全仓库任务、static/vendor、migrations 和跨角色改动。
 
+评分重点不是完成系统越复杂越好，而是学生能否用轻验证基线和强完成运行的证据，判断什么完成控制适合本功能。
+
 ## 2. 必需输入
 
 - `measurement_logs/baseline_completion_run.md`
-- `measurement_logs/soft_completion_run.md`
 - `measurement_logs/final_gated_completion_run.md`
 - `measurement_logs/next_agent_handoff_drill.md`
 - `completion_gate.md`
@@ -25,14 +26,15 @@
 
 ## 3. 评估 流程
 
-1. 检查 基线和最终是否比较同一个 Unit3 功能，Agent/工具/时间预算/起始状态差异是否被记录。
+1. 检查基线和强完成运行是否比较同一个 Unit3 功能，Agent/工具/时间预算/起始状态差异是否被记录。
 2. 检查 基线 是否出现 full-仓库 行为或提前 passing。
 3. 检查 scope_contract 是否存在且具体到一个角色/一个 view。
 4. 检查 完成门禁 三层是否完整。
 5. 检查 E2E 是否验证只读 attendance/结果/student data display。
 6. 对照 diff 检查 static/vendor/migrations/设置/跨角色。
 7. 检查 交接是否让下一位 Agent 独立接手。
-8. 比较 最终 是否比 基线 更可证明、更可交接。
+8. 比较强完成运行是否比基线更可证明、更可交接。
+9. 检查学生是否能说明哪些 gate、E2E、清洁检查或交接内容应保留、放松、合并或删除。
 
 ## 4. 指标
 
@@ -41,19 +43,10 @@
 - 跨角色 变更；
 - static/vendor/migrations 被触碰；
 - 端到端只读证据；
-- 基线/最终对照条件是否一致；
+- 基线/强完成运行对照条件是否一致；
 - 交接所需口头补充次数；
-- 清洁状态完整度。
-
-## Harness Design Scoring Lens
-
-Score Harness completeness and Harness effectiveness separately.
-
-- Completeness: completion gate, gate JSON, verification logs, E2E result, feature_list evidence, session exit checklist, handoff report, and handoff drill are present and internally consistent.
-- Effectiveness: soft completion exposes premature passing risk; hard/final run reduces premature passing, missing evidence, oral supplementation, and ambiguity about whether the feature is `passing`; the next Agent can replay the evidence without teacher explanation.
-- Soft vs hard scoring: soft checklist is acceptable for low-risk reminders, but completion evidence that blocks passing should be hard-gated and independently reviewable.
-- Tradeoff / overdesign signals: verification too light, verification too heavy, missing E2E, excessive E2E, handoff too short, handoff too long, missing clean state, or ritualized clean state. Penalize over-heavy artifacts only when they reduce clarity, executability, or independent review value.
-- Advanced reflection, not hard scoring unless evidenced: long-term maintenance burden, future pruning, and alternate balanced gate designs.
+- 清洁状态完整度；
+- final calibration judgment。
 
 ## 5. 评分量规
 
@@ -65,7 +58,7 @@ Score Harness completeness and Harness effectiveness separately.
 | Agent 可读错误消息 | 10 |
 | 交接协议质量 | 15 |
 | 清洁状态检查 | 10 |
-| soft/hard 完成对比 | 10 |
+| 校准判断质量 | 10 |
 
 ## 6. 红旗问题
 
@@ -98,7 +91,8 @@ Score Harness completeness and Harness effectiveness separately.
 - Static/vendor/migrations un被触碰:
 - 交接:
 - 清洁状态:
-- 基线 vs 最终:
+- 基线 vs 强完成:
+- 最终校准判断:
 
 ## 红旗问题
 -
